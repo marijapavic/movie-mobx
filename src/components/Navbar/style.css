@@ -1,0 +1,135 @@
+header {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  padding: 20px;
+  background-color: black;
+  justify-content: space-between;
+}
+
+.nav-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  letter-spacing: 2px;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  font-size: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul li a {
+  color: #a5a5a5;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+ul li a:hover {
+  color: #616161;
+}
+
+ul li a.active {
+  color: #fff;
+}
+
+ul li a.active.logout-btn {
+  color: #a5a5a5;
+}
+ul li a:hover.active.logout-btn {
+  color: #616161;
+}
+
+.movie-icon {
+  font-size: 40px;
+}
+
+@media ((min-width: 801px) and (max-width: 1000px)) {
+  header {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .nav-elements {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    background-color: black;
+    width: 0px;
+    height: calc(100vh - 60px);
+    transition: all 0.3s ease-in;
+    overflow: hidden;
+  }
+
+  .nav-elements.active {
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .nav-elements ul li {
+    margin-top: 20px;
+  }
+
+  .ham {
+    position: absolute;
+    left: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  header {
+    padding: 40px;
+  }
+  .nav-elements {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    background-color: black;
+    width: 0px;
+    height: calc(100vh - 60px);
+    transition: all 0.3s ease-in;
+    overflow: hidden;
+  }
+
+  .nav-elements.active {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-elements ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .nav-elements ul li {
+    margin-top: 20px;
+  }
+
+  .ham {
+    position: absolute;
+    left: 50px;
+  }
+
+  .nav-title {
+    display: none;
+  }
+}

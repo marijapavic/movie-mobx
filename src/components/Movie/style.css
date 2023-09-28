@@ -1,0 +1,30 @@
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.movie {
+  margin: 10px;
+  width: 260px;
+  background-color: #444444;
+  padding: 10px;
+  box-shadow: 0px 0px 4px #707070;
+}
+
+.movie img {
+  width: 100%;
+}
+
+.movie:hover {
+  box-shadow: 0px 0px 20px #707070;
+}
+
+.movie-title {
+  text-align: center;
+  margin: 5px;
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+}
