@@ -1,8 +1,8 @@
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { AuthStore } from "../../store/AuthStore";
-import { AuthService } from "../../services/AuthService";
 import "./style.css";
+import form from "../../utils/signInForm";
+import { SignInStore } from "../../store/SignInStore";
 
 const SignIn = observer(() => {
   return (
@@ -12,23 +12,20 @@ const SignIn = observer(() => {
         <input
           className="input"
           placeholder="Email"
-          onChange={(e) => {
-            AuthStore.setEmail(e.target.value);
-          }}
+          onChange={(e) => (form.$("email").value = e.target.value)}
+          {...form.$("email").bind()}
         />
+        <p className="p-error">{form.$("email").error}</p>
         <input
           className="input"
           placeholder="Password"
           type="password"
-          onChange={(e) => AuthStore.setPassword(e.target.value)}
+          onChange={(e) => (form.$("password").value = e.target.value)}
+          {...form.$("password").bind()}
         />
+        <p className="p-error">{form.$("password").error}</p>
         <Link to="/">
-          <button
-            className="submit-btn"
-            onClick={() =>
-              AuthService.signIn(AuthStore.email, AuthStore.password)
-            }
-          >
+          <button className="submit-btn" onClick={() => SignInStore.onSignIn()}>
             Sign in
           </button>
         </Link>

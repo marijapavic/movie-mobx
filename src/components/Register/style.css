@@ -43,11 +43,6 @@ input:focus {
   cursor: pointer;
 }
 
-.submit-btn:disabled {
-  opacity: 0.5;
-  cursor: auto;
-}
-
 .text {
   color: #1b998b;
 }
@@ -55,10 +50,6 @@ input:focus {
 .p-error {
   font-size: 12px;
   color: #d82727;
-}
-
-.pass-info {
-  font-size: 12px;
 }
 
 @media (max-width: 500px) {

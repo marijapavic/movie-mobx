@@ -15,7 +15,7 @@ header {
   letter-spacing: 2px;
 }
 
-ul {
+.nav-ul {
   list-style: none;
   display: flex;
   font-size: 20px;
@@ -25,24 +25,24 @@ a {
   text-decoration: none;
 }
 
-ul li a {
+.nav-ul li a {
   color: #a5a5a5;
   padding: 10px 20px;
   font-weight: bold;
 }
 
-ul li a:hover {
+.nav-ul li a:hover {
   color: #616161;
 }
 
-ul li a.active {
+.nav-ul li a.active {
   color: #fff;
 }
 
-ul li a.active.logout-btn {
+.nav-ul li a.active.logout-btn {
   color: #a5a5a5;
 }
-ul li a:hover.active.logout-btn {
+.nav-ul li a:hover.active.logout-btn {
   color: #616161;
 }
 

@@ -1,49 +1,23 @@
 import { useEffect } from "react";
-import { db } from "../../config/firebase";
-import { doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { useLocation, Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { MovieCardStore } from "../../store/MovieCardStore";
 import "./style.css";
 import { NavbarStore } from "../../store/NavbarStore";
+import Rating from "react-rating";
+import { AiFillStar } from "react-icons/ai";
+import { AiOutlineStar } from "react-icons/ai";
+import form from "../../utils/movieForm";
 
 const MovieCard = observer(() => {
   const location = useLocation();
   const { id } = location.state;
 
+  MovieCardStore.locationMethod(id);
+
   useEffect(() => {
-    getMovie();
+    MovieCardStore.getMovie();
   }, []);
-
-  const getMovie = async () => {
-    try {
-      const docRef = doc(db, "movies", id);
-      const docSnap = await getDoc(docRef);
-      MovieCardStore.setMovie(docSnap.data());
-      console.log(docSnap.data());
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const onSubmitEdit = async () => {
-    const movieDoc = doc(db, "movies", id);
-    await updateDoc(movieDoc, { title: MovieCardStore.newTitle });
-  };
-
-  const deleteMovie = async () => {
-    const movieDoc = doc(db, "movies", id);
-    await deleteDoc(movieDoc);
-  };
-
-  const openModal = () => {
-    MovieCardStore.openModal();
-  };
-
-  const closeModal = () => {
-    onSubmitEdit(MovieCardStore.movie.id);
-    MovieCardStore.closeModal();
-  };
 
   return (
     <div className="movie-container">
@@ -51,13 +25,15 @@ const MovieCard = observer(() => {
         <h2>{MovieCardStore.movie.title}</h2>
         {NavbarStore.isLoggedIn && (
           <div className="update-btns">
-            <button className="open-modal" onClick={openModal}>
+            <button className="open-modal" onClick={MovieCardStore.openModal}>
               Edit
             </button>
             <Link to="/">
               <button
                 className="delete-btn"
-                onClick={() => deleteMovie(MovieCardStore.movie.id)}
+                onClick={() =>
+                  MovieCardStore.deleteMovie(MovieCardStore.movie.id)
+                }
               >
                 Delete
               </button>
@@ -73,36 +49,48 @@ const MovieCard = observer(() => {
               <div className="modal-content">
                 <input
                   className="movie-input"
-                  defaultValue={MovieCardStore.movie.title}
-                  onChange={(e) => MovieCardStore.setNewTitle(e.target.value)}
+                  onChange={(e) => (form.$("title").value = e.target.name)}
+                  {...form.$("title").bind()}
                 />
+                <p className="p-error">{form.$("title").error}</p>
                 <input
                   className="movie-input"
-                  defaultValue={MovieCardStore.movie.releaseYear}
                   type="number"
                   onChange={(e) =>
-                    MovieCardStore.setNewReleaseYear(Number(e.target.value))
+                    (form.$("releaseYear").value = e.target.value)
                   }
+                  {...form.$("releaseYear").bind()}
                 />
+                <p className="p-error">{form.$("releaseYear").error}</p>
                 <input
                   className="movie-input"
-                  defaultValue={
-                    MovieCardStore.movie.image
-                      ? MovieCardStore.movie.image
-                      : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-                  }
                   type="url"
-                  onChange={(e) => MovieCardStore.setNewImage(e.target.value)}
+                  onChange={(e) => (form.$("image").value = e.target.value)}
+                  {...form.$("image").bind()}
                 />
+                <p className="p-error">{form.$("image").error}</p>
                 <textarea
-                  defaultValue={MovieCardStore.movie.overview}
-                  onChange={(e) =>
-                    MovieCardStore.setNewOverview(e.target.value)
-                  }
+                  onChange={(e) => (form.$("overview").value = e.target.value)}
+                  {...form.$("overview").bind()}
                   rows="5"
                   cols="50"
                 ></textarea>
-                <button className="edit-btn" onClick={() => closeModal()}>
+                <p className="p-error">{form.$("overview").error}</p>
+                <div className="rating">
+                  <span>Rate: </span>
+                  <Rating
+                    className="stars"
+                    emptySymbol={<AiOutlineStar />}
+                    fullSymbol={<AiFillStar />}
+                    onChange={(e) => (form.$("rating").value = e.target.value)}
+                    {...form.$("rating").bind()}
+                  />
+                  <p className="p-error">{form.$("rating").error}</p>
+                </div>
+                <button
+                  className="edit-btn"
+                  onClick={() => MovieCardStore.closeModal()}
+                >
                   Edit
                 </button>
               </div>
@@ -124,6 +112,11 @@ const MovieCard = observer(() => {
           <p>{MovieCardStore.movie.overview}</p>
           <h4>Release date:</h4>
           <p>{MovieCardStore.movie.releaseYear}</p>
+          <h4>Rating:</h4>
+          <p>
+            {MovieCardStore.movie.rating}
+            <AiFillStar />
+          </p>
         </div>
       </div>
     </div>

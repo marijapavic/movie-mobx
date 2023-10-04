@@ -1,8 +1,8 @@
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { AuthStore } from "../../store/AuthStore";
-import { AuthService } from "../../services/AuthService";
 import "./style.css";
+import form from "../../utils/registerForm";
+import { RegisterStore } from "../../store/RegisterStore";
 
 const Register = observer(() => {
   return (
@@ -12,51 +12,30 @@ const Register = observer(() => {
         <input
           className="input-auth"
           placeholder="Username"
-          onChange={(e) => {
-            AuthStore.setName(e.target.value);
-            AuthService.validateName();
-          }}
+          onChange={(e) => (form.$("name").value = e.target.value)}
+          {...form.$("name").bind()}
         />
-        {AuthStore.nameError && (
-          <p className="p-error">{AuthStore.nameError}</p>
-        )}
+        <p className="p-error">{form.$("name").error}</p>
         <input
           className="input-auth"
           placeholder="Email"
-          onChange={(e) => {
-            AuthStore.setEmail(e.target.value);
-            AuthService.validateEmail();
-          }}
+          type="email"
+          onChange={(e) => (form.$("email").value = e.target.value)}
+          {...form.$("email").bind()}
         />
-        {AuthStore.emailError && (
-          <p className="p-error">{AuthStore.emailError}</p>
-        )}
+        <p className="p-error">{form.$("email").error}</p>
         <input
           className="input-auth"
           placeholder="Password"
           type="password"
-          onChange={(e) => {
-            AuthStore.setPassword(e.target.value);
-            AuthService.validatePassword();
-          }}
+          onChange={(e) => (form.$("password").value = e.target.value)}
+          {...form.$("password").bind()}
         />
-        {AuthStore.passwordError && (
-          <div>
-            <p className="p-error">{AuthStore.passwordError}</p>
-            <p className="pass-info">Min 8 characters</p>
-          </div>
-        )}
+        <p className="p-error">{form.$("password").error}</p>
         <Link to="/">
           <button
-            disabled={!AuthStore.isValid}
             className="submit-btn"
-            onClick={() =>
-              AuthService.registerUser(
-                AuthStore.name,
-                AuthStore.email,
-                AuthStore.password
-              )
-            }
+            onClick={() => RegisterStore.onRegister()}
           >
             Sign up
           </button>

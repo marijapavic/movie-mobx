@@ -1,56 +1,79 @@
 import { action, makeObservable, observable } from "mobx";
+import MovieCardService from "../services/MovieCardService";
+import form from "../utils/movieForm";
+import { db } from "../config/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 class Store {
   constructor() {
     makeObservable(this, {
       movie: observable,
-      newTitle: observable,
-      newReleaseYear: observable,
-      newOverview: observable,
-      newImage: observable,
       isModalOpen: observable,
-      setMovie: action,
-      setNewTitle: action,
-      setNewReleaseYear: action,
-      setNewOverview: action,
-      setNewImage: action,
       openModal: action,
       closeModal: action,
+      location: observable,
+      setLocation: action,
+      MovieCardService: observable,
+      locationMethod: action,
     });
   }
   movie = [];
-  newTitle = "";
-  newReleaseYear = 0;
-  newOverview = "";
-  newImage = "";
   isModalOpen = false;
+  location = null;
+
+  setLocation = (location) => {
+    this.location = location;
+  };
+
+  locationMethod = (id) => {
+    this.location = id;
+  };
+
+  MovieCardService = new MovieCardService();
+
+  getMovie = () => {
+    this.MovieCardService.getMovie();
+  };
+
+  onSubmitEdit = () => {
+    this.MovieCardService.onSubmitEdit();
+  };
+
+  closeModal = () => {
+    this.onEdit();
+    this.isModalOpen = false;
+  };
+
+  deleteMovie = () => {
+    this.MovieCardService.deleteMovie();
+  };
 
   setMovie = (movie) => {
     this.movie = movie;
-  };
-
-  setNewTitle = (newTitle) => {
-    this.newTitle = newTitle;
-  };
-
-  setNewReleaseYear = (newReleaseYear) => {
-    this.newReleaseYear = newReleaseYear;
-  };
-
-  setNewOverview = (newOverview) => {
-    this.newOverview = newOverview;
-  };
-
-  setNewImage = (newImage) => {
-    this.newImage = newImage;
   };
 
   openModal = () => {
     this.isModalOpen = true;
   };
 
-  closeModal = () => {
-    this.isModalOpen = false;
+  onEdit = () => {
+    form.submit({
+      onSuccess: async () => {
+        const { title, releaseYear, image, overview, rating } = form.values();
+        const movieDoc = doc(db, "movies", MovieCardStore.location);
+        await updateDoc(movieDoc, {
+          title,
+          releaseYear,
+          image,
+          overview,
+          rating,
+        });
+        console.log(form.values());
+      },
+      onError(form) {
+        console.log(form.errors());
+      },
+    });
   };
 }
 

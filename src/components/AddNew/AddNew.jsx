@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { AddNewStore } from "../../store/AddNewStore";
 import { observer } from "mobx-react";
 import "./style.css";
-import { AddNewService } from "../../services/AddNewService";
+import Rating from "react-rating";
+import { AiOutlineStar } from "react-icons/ai";
+import { AiFillStar } from "react-icons/ai";
+import form from "../../utils/movieForm";
 
 const AddNew = observer(() => {
   return (
@@ -12,56 +15,48 @@ const AddNew = observer(() => {
         <input
           className="add-input"
           placeholder="Movie title"
-          onChange={(e) => {
-            AddNewStore.setNewTitle(e.target.value);
-            AddNewService.validateTitle();
-          }}
+          onChange={(e) => (form.$("title").value = e.target.name)}
+          {...form.$("title").bind()}
         />
-        {AddNewStore.titleError && (
-          <p className="p-error">{AddNewStore.titleError}</p>
-        )}
+        <p className="p-error">{form.$("title").error}</p>
         <input
           className="add-input"
           placeholder="Release year"
           type="number"
-          onChange={(e) => {
-            AddNewStore.setNewReleaseYear(e.target.value);
-            AddNewService.validateReleaseYear();
-          }}
+          onChange={(e) => (form.$("releaseYear").value = e.target.value)}
+          {...form.$("releaseYear").bind()}
         />
-        {AddNewStore.releaseYearError && (
-          <p className="p-error">{AddNewStore.releaseYearError}</p>
-        )}
+        <p className="p-error">{form.$("releaseYear").error}</p>
         <input
           className="add-input"
           placeholder="Image url"
           type="url"
-          onChange={(e) => {
-            AddNewStore.setNewImage(e.target.value);
-            AddNewService.validateImage();
-          }}
+          onChange={(e) => (form.$("image").value = e.target.value)}
+          {...form.$("image").bind()}
         />
-        {AddNewStore.imageError && (
-          <p className="p-error">{AddNewStore.imageError}</p>
-        )}
+        <p className="p-error">{form.$("image").error}</p>
         <textarea
           placeholder="Movie overview"
-          onChange={(e) => {
-            AddNewStore.setNewOverview(e.target.value);
-            AddNewService.validateOverview();
-          }}
+          onChange={(e) => (form.$("overview").value = e.target.value)}
+          {...form.$("overview").bind()}
           rows="5"
           cols="50"
         ></textarea>
-        {AddNewStore.overviewError && (
-          <p className="p-error">{AddNewStore.overviewError}</p>
-        )}
+        <p className="p-error">{form.$("overview").error}</p>
+        <div className="rating">
+          <span>Rate: </span>
+          <Rating
+            initialRating={AddNewStore.newRating}
+            className="stars"
+            emptySymbol={<AiOutlineStar />}
+            fullSymbol={<AiFillStar />}
+            onChange={(e) => (form.$("rating").value = e.target.value)}
+            {...form.$("rating").bind()}
+          />
+          <p className="p-error">{form.$("rating").error}</p>
+        </div>
         <Link to="/">
-          <button
-            className="submit-btn"
-            disabled={!AddNewStore.isValid}
-            onClick={AddNewService.onSubmitMovie}
-          >
+          <button className="submit-btn" onClick={() => AddNewStore.onAddNew()}>
             Submit movie
           </button>
         </Link>

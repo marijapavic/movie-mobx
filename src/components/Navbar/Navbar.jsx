@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { NavbarStore } from "../../store/NavbarStore";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { useEffect } from "react";
-import { NavbarService } from "../../services/NavbarService";
+import NavbarService from "../../services/NavbarService";
 import "./style.css";
 
 const Navbar = observer(() => {
@@ -15,7 +15,6 @@ const Navbar = observer(() => {
     const name = user.displayName;
     const mail = user.email;
     console.log(name, mail);
-    console.log(user);
   }
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const Navbar = observer(() => {
         <Hamburger isOpen={NavbarStore.showNavbar} />
       </div>
       <div className={`nav-elements ${NavbarStore.showNavbar && "active"}`}>
-        <ul>
+        <ul className="nav-ul">
           <li className="listitem">
             <NavLink to="/" onClick={NavbarStore.handleShowNavbar}>
               Home
@@ -50,7 +49,7 @@ const Navbar = observer(() => {
               <li className="listitem">
                 <NavLink
                   to="/"
-                  onClick={NavbarService.logOut}
+                  onClick={NavbarStore.logOut}
                   className="logout-btn"
                 >
                   Log out

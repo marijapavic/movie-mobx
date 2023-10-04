@@ -1,76 +1,35 @@
-import { action, makeObservable, observable, computed } from "mobx";
+import { action, makeObservable } from "mobx";
+import form from "../utils/movieForm";
+import { db, auth } from "../config/firebase";
+import { collection, addDoc } from "firebase/firestore";
+
+const moviesCollectionRef = collection(db, "movies");
 
 class Store {
   constructor() {
     makeObservable(this, {
-      newTitle: observable,
-      titleError: observable,
-      newReleaseYear: observable,
-      releaseYearError: observable,
-      newImage: observable,
-      imageError: observable,
-      newOverview: observable,
-      overviewError: observable,
-      setNewTitle: action,
-      setTitleError: action,
-      setNewReleaseYear: action,
-      setReleaseYearError: action,
-      setNewImage: action,
-      setImageError: action,
-      setNewOverview: action,
-      setOverviewError: action,
-      isValid: computed,
+      onAddNew: action,
     });
   }
-  newTitle = "";
-  titleError = "";
-  newReleaseYear = "";
-  releaseYearError = "";
-  newImage = "";
-  imageError = "";
-  newOverview = "";
-  overviewError = "";
 
-  setNewTitle = (newTitle) => {
-    this.newTitle = newTitle;
+  onAddNew = () => {
+    form.submit({
+      onSuccess(form) {
+        const { title, releaseYear, image, overview, rating } = form.values();
+        addDoc(moviesCollectionRef, {
+          title,
+          releaseYear,
+          userId: auth?.currentUser?.uid,
+          image,
+          overview,
+          rating,
+        });
+      },
+      onError(form) {
+        console.log(form.errors());
+      },
+    });
   };
-
-  setTitleError = (titleError) => {
-    this.titleError = titleError;
-  };
-
-  setNewReleaseYear = (newReleaseYear) => {
-    this.newReleaseYear = newReleaseYear;
-  };
-
-  setReleaseYearError = (releaseYearError) => {
-    this.releaseYearError = releaseYearError;
-  };
-
-  setNewImage = (newImage) => {
-    this.newImage = newImage;
-  };
-
-  setImageError = (imageError) => {
-    this.imageError = imageError;
-  };
-
-  setNewOverview = (newOverview) => {
-    this.newOverview = newOverview;
-  };
-
-  setOverviewError = (overviewError) => {
-    this.overviewError = overviewError;
-  };
-
-  get isValid() {
-    return (
-      this.titleError === "" &&
-      this.releaseYearError === "" &&
-      this.imageError === "" &&
-      this.overviewError === ""
-    );
-  }
 }
 
 export const AddNewStore = new Store();

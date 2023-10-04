@@ -1,26 +1,15 @@
 import { db } from "../config/firebase";
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { MovieCardStore } from "../store/MovieCardStore";
-import { action, makeObservable, observable } from "mobx";
-import { useLocation } from "react-router-dom";
 
-class Store {
-  constructor() {
-    makeObservable(this, {
-      location: observable,
-      id: observable,
-      getMovie: action,
-      onSubmitEdit: action,
-      deleteMovie: action,
-    });
-  }
-
-  location = useLocation();
-  id = this.location.id;
+class MovieCardService {
+  static locationMethod = (id) => {
+    console.log(id);
+  };
 
   getMovie = async () => {
     try {
-      const docRef = doc(db, "movies", this.id);
+      const docRef = doc(db, "movies", MovieCardStore.location);
       const docSnap = await getDoc(docRef);
       MovieCardStore.setMovie(docSnap.data());
       console.log(docSnap.data());
@@ -30,14 +19,20 @@ class Store {
   };
 
   onSubmitEdit = async () => {
-    const movieDoc = doc(db, "movies", this.id);
-    await updateDoc(movieDoc);
+    const movieDoc = doc(db, "movies", MovieCardStore.location);
+    await updateDoc(movieDoc, {
+      title: MovieCardStore.newTitle,
+      releaseYear: MovieCardStore.newReleaseYear,
+      image: MovieCardStore.newImage,
+      overview: MovieCardStore.newOverview,
+      rating: MovieCardStore.newRating,
+    });
   };
 
   deleteMovie = async () => {
-    const movieDoc = doc(db, "movies", this.id);
+    const movieDoc = doc(db, "movies", MovieCardStore.location);
     await deleteDoc(movieDoc);
   };
 }
 
-export const MovieCardService = new Store();
+export default MovieCardService;

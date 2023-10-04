@@ -1,4 +1,5 @@
 import { action, makeObservable, observable } from "mobx";
+import NavbarService from "../services/NavbarService";
 
 class Store {
   constructor() {
@@ -13,6 +14,8 @@ class Store {
   showNavbar = false;
   isLoggedIn = null;
 
+  NavbarService = new NavbarService();
+
   setShowNavbar = (showNavbar) => {
     this.showNavbar = showNavbar;
   };
@@ -23,6 +26,10 @@ class Store {
 
   setIsLoggedIn = (isLoggedIn) => {
     this.isLoggedIn = isLoggedIn;
+  };
+
+  logOut = () => {
+    this.NavbarService.logOut();
   };
 }
 

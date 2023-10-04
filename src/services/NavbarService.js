@@ -1,14 +1,7 @@
 import { auth } from "../config/firebase";
-import { action, makeObservable } from "mobx";
 import { signOut } from "firebase/auth";
 
-class Store {
-  constructor() {
-    makeObservable(this, {
-      logOut: action,
-    });
-  }
-
+class NavbarService {
   logOut = async () => {
     try {
       await signOut(auth);
@@ -19,4 +12,4 @@ class Store {
   };
 }
 
-export const NavbarService = new Store();
+export default NavbarService;
